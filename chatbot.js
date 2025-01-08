@@ -1,22 +1,8 @@
-// Carica la chiave dinamicamente dal file config.js
-async function getApiKey() {
-    const response = await fetch("config.js");
-    const scriptContent = await response.text();
-    const match = scriptContent.match(/window\.OPENAI_API_KEY='(.*)';/);
-    return match ? match[1] : null;
-}
-
 async function getResponse() {
-    const apiKey = await getApiKey();
-    const userInput = document.getElementById("userInput").value;
     const responseElement = document.getElementById("response");
+    const userInput = document.getElementById("userInput").value;
 
-    if (!apiKey) {
-        responseElement.textContent = "Errore: Impossibile caricare l'API Key.";
-        return;
-    }
-
-    if (userInput.trim() === "") {
+    if (!userInput.trim()) {
         responseElement.textContent = "Per favore, inserisci una domanda valida.";
         return;
     }
@@ -24,6 +10,16 @@ async function getResponse() {
     responseElement.textContent = "Sto elaborando la tua richiesta...";
 
     try {
+        const apiKey = await fetch("config.js").then(res => res.text()).then(text => {
+            const match = text.match(/window\.OPENAI_API_KEY='(.*)';/);
+            return match ? match[1] : null;
+        });
+
+        if (!apiKey) {
+            responseElement.textContent = "Errore: Impossibile caricare l'API Key.";
+            return;
+        }
+
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -39,7 +35,7 @@ async function getResponse() {
         const data = await response.json();
         responseElement.textContent = data.choices[0].message.content;
     } catch (error) {
-        responseElement.textContent = "Si è verificato un errore. Per favore riprova.";
-        console.error("Errore:", error);
+        responseElement.textContent = "Errore durante la richiesta. Riprova.";
+        console.error(error);
     }
 }
