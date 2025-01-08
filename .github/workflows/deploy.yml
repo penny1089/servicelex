@@ -1,4 +1,4 @@
-name: Deploy Chatbot
+name: Deploy Chatbot to GitHub Pages
 
 on:
   push:
@@ -10,27 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Node.js
+      # Setup Node.js (per eventuali dipendenze future)
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      - name: Setup environment
-        run: mkdir public
-
-      - name: Add API Key to environment (not in commit)
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      # Copia i file necessari nella directory docs
+      - name: Prepare public directory
         run: |
-          echo "window.OPENAI_API_KEY='${{ secrets.OPENAI_API_KEY }}';" > public/config.js
+          mkdir -p docs
+          cp index.html docs/
+          cp chatbot.js docs/
+          touch docs/.nojekyll
 
+      # Deploy su GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          exclude_assets: |
-            config.js
+          publish_dir: ./docs
