@@ -21,7 +21,7 @@ jobs:
       - name: Setup environment
         run: mkdir public
 
-      - name: Add API Key to configuration
+      - name: Add API Key to environment (not in commit)
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
@@ -32,4 +32,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          deploy_branch: docs
+          exclude_assets: |
+            config.js
