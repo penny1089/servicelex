@@ -32,6 +32,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          allow_empty_commit: true
-          commit_message: "Automated deployment: $(date)"
-          deploy_branch: gh-pages
+          deploy_branch: docs
