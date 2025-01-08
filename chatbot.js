@@ -1,4 +1,4 @@
-const apiKey = "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"; // Inserisci la tua chiave API qui
+const apiKey = "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"; // Inserisci la tua chiave API qui
 
 async function getResponse() {
     const userInput = document.getElementById("userInput").value;
