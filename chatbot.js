@@ -1,5 +1,3 @@
-const apiKey = "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"; // Inserisci la tua chiave API qui
-
 async function getResponse() {
     const userInput = document.getElementById("userInput").value;
     const responseElement = document.getElementById("response");
@@ -16,7 +14,7 @@ async function getResponse() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}`
+                "Authorization": `Bearer ${window.OPENAI_API_KEY}`
             },
             body: JSON.stringify({
                 model: "gpt-4",
